@@ -2,6 +2,20 @@
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+  -webkit-font-smoothing: antialiased;
+  /* Для WebKit-браузеров */
+  -moz-osx-font-smoothing: grayscale;
+  /* Для macOS */
+
+  text-rendering: optimizeLegibility;
+  /* Улучшает читаемость */
+  font-kerning: normal;
+  /* Корректировка межбуквенных расстояний */
+  line-height: 1.6;
+  /* Удобочитаемый интервал */
+  text-rendering: optimizeLegibility;
+  font-kerning: normal;
+
 
 }
 
@@ -20,6 +34,7 @@ body {
   margin: 0;
   display: flex;
   flex-direction: column;
+
 
 
 }

@@ -1,13 +1,18 @@
 "use client";
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Engine, Scene, SceneLoader, ArcRotateCamera, HemisphericLight, Vector3, AnimationGroup, PointerEventTypes, ArcRotateCameraPointersInput, StandardMaterial, Color3, PBRMaterial, Texture, AbstractMesh, HDRCubeTexture, MeshBuilder } from "@babylonjs/core";
+import { Engine, Scene, SceneLoader, ArcRotateCamera, HemisphericLight, Vector3, AnimationGroup, PointerEventTypes, ArcRotateCameraPointersInput, StandardMaterial, Color3, PBRMaterial, Texture, AbstractMesh, HDRCubeTexture, MeshBuilder, Mesh } from "@babylonjs/core";
 import "@babylonjs/loaders";
 import { createMaterial, texturesAll, TexturesAllKeys } from "./materials";
 import Image from "next/image";
 import ColorPicker from "../../common/ColorPicker/ColorPicker";
 import styles from "./babylon.module.scss";
 import { getAnimationText } from "./animationsInfo";
+import { setCameraToSceneBounds } from "../../../../../utils/babyloneUtils";
+import {} from "@heroicons/react";
+import { CubeTransparentIcon } from "@heroicons/react/24/outline";
+import { Cog6ToothIcon } from "@heroicons/react/24/outline";
+import { XCircleIcon } from "@heroicons/react/24/outline";
 
 // В имени мэша до # название её анимации (mech#1  - значит анимация mech) - мэш называем до # как название анимации которая играет по клику на мэш (т.к. мэшей может быть много в одной анимации)
 // Текстуры base_1, base_2 ... для смены
@@ -31,6 +36,11 @@ const BabylonModelWithAnimation: React.FC<{
     const [meshesArr, setMeshesArr] = useState<AbstractMesh[]>([]);
 
     const [baseColor, setBaseColor] = useState<Color3>(Color3.FromHexString("#ffffff"));
+
+    const [fullScreen, setFullscreen] = useState(false);
+
+    //! Функция при зменении размеров экрана
+    const winResize = () => engineRef.current && engineRef.current.resize();
 
     //! Функция для запуска выбранной анимации
     const playAnimation = (animationName: string) => {
@@ -131,17 +141,25 @@ const BabylonModelWithAnimation: React.FC<{
         }
 
         //! Добавляем камеру
-        const camera = new ArcRotateCamera("camera", Math.PI / 2, Math.PI / 4, 5, Vector3.Zero(), scene);
+        const camera = new ArcRotateCamera(
+            "camera",
+            Math.PI / 2, // Угол вращения по горизонтали
+            Math.PI / 4, // Угол вращения по вертикали
+            3, // Расстояние от камеры до цели
+            new Vector3(0, 0.5, 0), // Начальная точка фокусировки (сместили вниз)
+            scene
+        );
 
         camera.wheelDeltaPercentage = 0.01; // Уменьшение значения делает скролл более плавным
         camera.pinchDeltaPercentage = 0.01; // Для плавного изменения масштаба при жестах
         // Настройка скролла
         camera.wheelPrecision = 100; // Мягкость приближения
         camera.wheelDeltaPercentage = 0.01; // Плавность изменения масштаба
-        camera.inertia = 0.9; // Инерция для плавности
+        camera.inertia = 0.8; // Инерция для плавности
+
         // Ограничение приближения
-        camera.lowerRadiusLimit = 3;
-        camera.upperRadiusLimit = 7;
+        // camera.lowerRadiusLimit = 3;
+        // camera.upperRadiusLimit = 7;
 
         camera.upperBetaLimit = Math.PI / 2; // Максимальный угол (горизонтальный вид) // Запрещаем смотреть снизу
 
@@ -168,6 +186,8 @@ const BabylonModelWithAnimation: React.FC<{
 
         //! Загружаем модель
         SceneLoader.ImportMesh("", "", modelPath, scene, (meshes, particleSystems, skeletons, animGroups) => {
+            setCameraToSceneBounds(scene, camera);
+
             console.log("Model loaded with animations", animGroups);
 
             // Останавливаем все анимации изначально
@@ -200,8 +220,8 @@ const BabylonModelWithAnimation: React.FC<{
         engine.runRenderLoop(() => {
             scene.render();
         });
-        //! При зменении размеров экрана
-        const winResize = () => engine.resize();
+
+        //! Отслеживаем изменение экрана
         window.addEventListener("resize", winResize);
 
         //! Отключаем скролл страницы при наведении на canvas
@@ -213,9 +233,9 @@ const BabylonModelWithAnimation: React.FC<{
         //! Очистка ресурсов при размонтировании
         return () => {
             window.removeEventListener("resize", winResize);
+            canvasRef.current?.removeEventListener("resize", winResize);
             scene.dispose();
             engine.dispose();
-            canvasRef.current?.removeEventListener("wheel", disableScroll);
         };
     }, []);
 
@@ -225,6 +245,11 @@ const BabylonModelWithAnimation: React.FC<{
         changeMaterialColor({ targetMaterialName: "base_1", newColor: baseColor });
     }, [baseColor]);
 
+    //Эффект ролного экрана (что бы модель была четкая)
+    useEffect(() => {
+        winResize();
+    }, [fullScreen]);
+
     //!MEMOS
     //
     const animationBlockMemo = useMemo(() => {
@@ -232,6 +257,7 @@ const BabylonModelWithAnimation: React.FC<{
             <div className={styles.animationsBlock}>
                 {animationGroups.map((animation) => (
                     <div key={animation.name + "_anim"} className={`${styles.animationItem} ${playedAnimations.includes(animation.name) ? styles.animationPlayed : ""}`} onClick={() => playAnimation(animation.name)}>
+                        <Cog6ToothIcon width={20} height={20} />
                         <span>{getAnimationText({ animationName: animation.name, played: playedAnimations.includes(animation.name) })}</span>
                     </div>
                 ))}
@@ -240,15 +266,21 @@ const BabylonModelWithAnimation: React.FC<{
     }, [animationGroups, playedAnimations]);
 
     return (
-        <div className={styles.babyloneMainWrap}>
+        <div className={`${styles.babyloneMainWrap} ${fullScreen ? styles.babyloneFullScreen : ""}`}>
             {/* {baseColor?.toString()} */}
             {/* Canvas для рендеринга Babylon.js */}
             <canvas ref={canvasRef} />
             {/* {playedAnimations} */}
+            <div className={styles.colorPickerBlock}>
+                <ColorPicker setBaseColor={setBaseColor} />
+            </div>
             {animationBlockMemo}
+            <div className={styles.fullScreenBtn} onClick={() => setFullscreen((state) => !state)}>
+                <div>{fullScreen ? "" : "На весь экран"}</div>
+                {fullScreen ? <XCircleIcon width={30} height={30} /> : <CubeTransparentIcon width={30} height={30} />}
+            </div>
 
             <div className={styles.materialPanel}>
-                <ColorPicker setBaseColor={setBaseColor} />
                 {/* <select onChange={(e) => playAnimation(e.target.value)} value={selectedAnimation || ""} style={{ padding: "5px", fontSize: "1rem" }}>
                     <option value="" disabled>
                         Выберите анимацию
@@ -260,35 +292,62 @@ const BabylonModelWithAnimation: React.FC<{
                     ))}
                 </select> */}
 
-                <div style={{ display: "flex", gap: 10 }}>
-                    {texturesAll
-                        .filter((textItem) => [...textItem.forTarget].includes("base_1"))
-                        .map((textureItem) => (
-                            <div key={textureItem.name} onClick={() => changeMaterialByName({ targetMaterialName: "base_1", materialKey: textureItem.name, changeColor: true })}>
-                                <Image src={textureItem.texture} alt="key" width={50} height={50} style={{ borderRadius: "50%" }} />
-                                {textureItem.name}
-                            </div>
-                        ))}
+                <div className={styles.materialBlock}>
+                    <div className={styles.title}>Выбор обивки</div>
+                    <div className={styles.materialsList}>
+                        {texturesAll
+                            .filter((textItem) => [...textItem.forTarget].includes("base_1"))
+                            .map((textureItem) => (
+                                <div key={textureItem.name} className={styles.materialItem} onClick={() => changeMaterialByName({ targetMaterialName: "base_1", materialKey: textureItem.name, changeColor: true })}>
+                                    <div className={styles.imgWrap}>
+                                        <Image src={textureItem.texture} alt="key" width={300} height={300} />
+                                    </div>
+                                    <div className={styles.materialName}>{textureItem.name}</div>
+                                    <div className={styles.materialAboutBlock}>
+                                        <div className={styles.name}>{textureItem.name}</div>
+                                        <Image src={textureItem.texture} alt="key" width={300} height={300} />
+                                    </div>
+                                </div>
+                            ))}
+                    </div>
                 </div>
-                <div style={{ display: "flex", gap: 10 }}>
-                    {texturesAll
-                        .filter((textItem) => [...textItem.forTarget].includes("base_2"))
-                        .map((textureItem) => (
-                            <div key={textureItem.name} onClick={() => changeMaterialByName({ targetMaterialName: "base_2", materialKey: textureItem.name })}>
-                                <Image src={textureItem.texture} alt="key" width={50} height={50} style={{ borderRadius: "50%" }} />
-                                {textureItem.name}
-                            </div>
-                        ))}
+                <div className={styles.materialBlock}>
+                    <div className={styles.title}>Выбор обивки</div>
+                    <div className={styles.materialsList}>
+                        {texturesAll
+                            .filter((textItem) => [...textItem.forTarget].includes("base_2"))
+                            .map((textureItem) => (
+                                <div key={textureItem.name} className={styles.materialItem} onClick={() => changeMaterialByName({ targetMaterialName: "base_2", materialKey: textureItem.name })}>
+                                    <div className={styles.imgWrap}>
+                                        <Image src={textureItem.texture} alt="key" width={300} height={300} />
+                                    </div>
+                                    <div className={styles.materialName}>{textureItem.name}</div>
+                                    <div className={styles.materialAboutBlock}>
+                                        <div className={styles.name}>{textureItem.name}</div>
+                                        <Image src={textureItem.texture} alt="key" width={300} height={300} />
+                                    </div>
+                                </div>
+                            ))}
+                    </div>
                 </div>
-                <div style={{ display: "flex", gap: 10 }}>
-                    {texturesAll
-                        .filter((textItem) => [...textItem.forTarget].includes("base_3"))
-                        .map((textureItem) => (
-                            <div key={textureItem.name} onClick={() => changeMaterialByName({ targetMaterialName: "base_3", materialKey: textureItem.name })}>
-                                <Image src={textureItem.texture} alt="key" width={50} height={50} style={{ borderRadius: "50%" }} />
-                                {textureItem.name}
-                            </div>
-                        ))}
+                <div className={styles.materialBlock}>
+                    <div className={styles.title}>Выбор обивки</div>
+                    <div className={styles.materialsList}>
+                        {texturesAll
+                            .filter((textItem) => [...textItem.forTarget].includes("base_3"))
+                            .map((textureItem) => (
+                                <div key={textureItem.name} className={styles.materialItem} onClick={() => changeMaterialByName({ targetMaterialName: "base_3", materialKey: textureItem.name })}>
+                                    <div className={styles.imgWrap}>
+                                        <Image src={textureItem.texture} alt="key" width={300} height={300} />
+                                    </div>
+                                    <div className={styles.materialName}>{textureItem.name}</div>
+                                    <div className={styles.materialAboutBlock}>
+                                        <div className={styles.name}>{textureItem.name}</div>
+                                        <Image src={textureItem.texture} alt="key" width={300} height={300} />
+                                    </div>
+                                </div>
+                            ))}
+                    </div>
                 </div>
             </div>
         </div>

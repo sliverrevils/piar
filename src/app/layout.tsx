@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Roboto } from "next/font/google";
 import "./styles/globals.css";
+import Container from "./components/common/Container/Container";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -10,6 +11,11 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
     variable: "--font-geist-mono",
     subsets: ["latin"],
+});
+
+const roboto = Roboto({
+    subsets: ["latin"],
+    weight: ["400", "700"], // Обычный и жирный
 });
 
 export const metadata: Metadata = {
@@ -24,8 +30,8 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className={`${geistSans.variable} ${geistMono.variable}`}>
-                <header>
+            <body className={roboto.className}>
+                {/* <header>
                     <div className="logo">
                         <img src="logo.png" alt="Логотип мебельного магазина" />
                     </div>
@@ -37,9 +43,9 @@ export default function RootLayout({
                             Email: <a href="mailto:info@example.com">info@example.com</a>
                         </p>
                     </div>
-                </header>
+                </header> */}
 
-                <nav>
+                {/* <nav>
                     <ul style={{ display: "flex", listStyle: "none", gap: 20 }}>
                         <li>
                             <a href="/tables">Столы</a>
@@ -54,16 +60,18 @@ export default function RootLayout({
                             <a href="/sofas">Диваны</a>
                         </li>
                     </ul>
-                </nav>
-                <main>{children}</main>
+                </nav> */}
+                <main>
+                    <Container>{children}</Container>
+                </main>
 
-                <footer>
+                {/* <footer>
                     <p>&copy; 2025 Мебельный Магазин. Все права защищены.</p>
                     <p>Адрес: ул. Примерная, д. 10, Москва</p>
                     <p>
                         Телефон: <a href="tel:+71234567890">+7 (123) 456-78-90</a>
                     </p>
-                </footer>
+                </footer> */}
             </body>
         </html>
     );

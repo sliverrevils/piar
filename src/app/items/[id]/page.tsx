@@ -48,10 +48,12 @@ export default async function ItemPage(props) {
         <article className={styles.itemPageWrap}>
             <h1>Таурус</h1>
 
-            <div className={styles.modelBlock}>
-                <BabylonModelWithAnimation modelPath="\items\Taurus\model\taurus_otom_anim.glb" />
+            <div className={styles.itemBlock}>
+                <div className={styles.modelBlock}>
+                    <BabylonModelWithAnimation modelPath="\items\Taurus\model\taurus_otom_anim.glb" />
+                </div>
+                <div className={styles.descriptionsBlock}>{mockSofa.descriptions}</div>
             </div>
-            <div className={styles.descriptionsBlock}>{mockSofa.descriptions}</div>
         </article>
     );
 }
