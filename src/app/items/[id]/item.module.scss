@@ -1,0 +1,15 @@
+.itemPageWrap {
+    border: 1px solid red;
+    display: flex;
+
+    .modelBlock {
+        border: 1px solid rgb(10, 107, 47);
+
+        width: 1000px;
+    }
+
+    .descriptionsBlock {
+        width: 100px;
+    }
+
+}
