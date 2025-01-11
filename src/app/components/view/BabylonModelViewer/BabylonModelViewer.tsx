@@ -251,7 +251,7 @@ const BabylonModelWithAnimation: React.FC<{
     }, [fullScreen]);
 
     //!MEMOS
-    //
+    //animations block
     const animationBlockMemo = useMemo(() => {
         return (
             <div className={styles.animationsBlock}>
@@ -265,6 +265,16 @@ const BabylonModelWithAnimation: React.FC<{
         );
     }, [animationGroups, playedAnimations]);
 
+    //full screen button
+    const fullScreenBtnMemo = useMemo(() => {
+        return (
+            <div className={styles.fullScreenBtn} onClick={() => setFullscreen((state) => !state)}>
+                <div className={styles.text}>{fullScreen ? "" : "На весь экран"}</div>
+                {fullScreen ? <XCircleIcon width={30} height={30} /> : <CubeTransparentIcon width={25} height={25} />}
+            </div>
+        );
+    }, [fullScreen]);
+
     return (
         <div className={`${styles.babyloneMainWrap} ${fullScreen ? styles.babyloneFullScreen : ""}`}>
             {/* {baseColor?.toString()} */}
@@ -275,10 +285,7 @@ const BabylonModelWithAnimation: React.FC<{
                 <ColorPicker setBaseColor={setBaseColor} />
             </div>
             {animationBlockMemo}
-            <div className={styles.fullScreenBtn} onClick={() => setFullscreen((state) => !state)}>
-                <div>{fullScreen ? "" : "На весь экран"}</div>
-                {fullScreen ? <XCircleIcon width={30} height={30} /> : <CubeTransparentIcon width={30} height={30} />}
-            </div>
+            {fullScreenBtnMemo}
 
             <div className={styles.materialPanel}>
                 {/* <select onChange={(e) => playAnimation(e.target.value)} value={selectedAnimation || ""} style={{ padding: "5px", fontSize: "1rem" }}>

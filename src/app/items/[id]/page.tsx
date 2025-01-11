@@ -1,6 +1,9 @@
 import BabylonModelWithAnimation from "@/app/components/view/BabylonModelViewer/BabylonModelViewer";
 import { IItem } from "@/MongoDb/models/itemModel";
 import styles from "./item.module.scss";
+import SliderWithThumbnails from "@/app/components/common/Slider/Slider";
+import Image from "next/image";
+//import Slider from "@/app/components/common/Slider/Slider";
 
 const mockSofa: IItem = {
     name: "Таурус с оттоманкой",
@@ -53,6 +56,18 @@ export default async function ItemPage(props) {
                     <BabylonModelWithAnimation modelPath="\items\Taurus\model\taurus_otom_anim.glb" />
                 </div>
                 <div className={styles.descriptionsBlock}>{mockSofa.descriptions}</div>
+            </div>
+            <div>{/* <Slider>{[<div>dsd</div>, <div>sdss</div>]}</Slider> */}</div>
+            <div>
+                <SliderWithThumbnails>
+                    {/* <BabylonModelWithAnimation modelPath="\items\Taurus\model\taurus_otom_anim.glb" /> */}
+                    <Image src={"/items/Taurus/img/photo_2023-09-01_12-30-16.jpg"} alt="img" width={3000} height={2000} />
+                    <Image src={"/items/Taurus/img/photo_2023-09-01_12-30-59.jpg"} alt="img" width={3000} height={2000} />
+                    <Image src={"/items/Taurus/img/photo_2023-09-01_12-31-04.jpg"} alt="img" width={3000} height={2000} />
+                    <Image src={"/items/Taurus/img/photo_2023-09-01_12-31-08.jpg"} alt="img" width={3000} height={2000} />
+                    <Image src={"/items/Taurus/img/photo_2023-09-01_12-31-15.jpg"} alt="img" width={3000} height={2000} />
+                    <Image src={"/items/Taurus/img/taurus1.jpg"} alt="img" width={3000} height={2000} />
+                </SliderWithThumbnails>
             </div>
         </article>
     );

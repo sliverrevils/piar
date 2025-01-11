@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Color3 } from "@babylonjs/core";
+import styles from "./colPicker.module.scss";
 
 // Хук для debounce
 function useDebounce<T>(value: T, delay: number): T {
@@ -36,8 +37,10 @@ const ColorPicker = ({ setBaseColor }: { setBaseColor: React.Dispatch<React.SetS
     };
 
     return (
-        <div>
+        <label className={styles.colPickerWrap}>
             {/* <label htmlFor="colorPicker">Выберите базовый цвет цвет:</label> */}
+            <div className={styles.text}>Базовый цвет </div>
+            <div className={styles.colBox} style={{ background: hexColor }}></div>
             <input
                 id="colorPicker"
                 type="color"
@@ -50,7 +53,7 @@ const ColorPicker = ({ setBaseColor }: { setBaseColor: React.Dispatch<React.SetS
             <p>
                 Color3: <b>{color.toString()}</b>
             </p> */}
-        </div>
+        </label>
     );
 };
 
