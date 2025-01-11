@@ -1,7 +1,7 @@
 .babyloneMainWrap {
     // overflow: hidden;
     width: 100%;
-    height: 100%;
+    height: auto;
     //border: 1px solid black;
     border-radius: 10px;
 
@@ -19,7 +19,6 @@
         position: absolute;
         top: 5px;
         left: 5px;
-
     }
 
     .fullScreenBtn {
@@ -31,7 +30,6 @@
         align-items: center;
         cursor: pointer;
         opacity: .8;
-
 
         .text {
             font-size: 13px;
@@ -48,24 +46,30 @@
     }
 
     .materialPanel {
-        width: 100%;
+        border: 1px solid black;
 
-
-
+        position: absolute;
+        right: 0;
+        top: 30px;
+        bottom: 0;
+        max-height: 100%;
+        overflow-y: auto;
 
         .materialBlock {
-            background: lightgreen;
+            //  background: lightgreen;
             display: flex;
             flex-direction: column;
             gap: 10px;
-            max-width: 100%;
+            max-height: 100%;
 
-            display: none;
-
-            .title {}
+            .title {
+                font-size: 12px;
+                display: none;
+            }
 
             .materialsList {
                 display: flex;
+                flex-direction: column;
                 gap: 10px;
 
                 .materialItem {
@@ -84,6 +88,7 @@
                     }
 
                     .materialName {
+                        display: none;
                         font-size: 14px;
                         text-wrap: wrap;
                     }
@@ -117,23 +122,26 @@
     }
 
     .animationsBlock {
+        width: 0px;
+        position: absolute;
+        top: 100px;
+        left: 0;
         background: lightblue;
-        padding: 10px;
         display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 10px;
-        display: none;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
 
         .animationItem {
             border-radius: 15px;
             border: 1px solid black;
-            padding: 5px 10px;
+            padding: 2px 5px;
             text-wrap: nowrap;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 5px;
+            font-size: 12px;
 
         }
 
@@ -157,7 +165,9 @@
         height: 100%;
     }
 
-
+    .materialPanel {
+        top: 70px;
+    }
 
     .fullScreenBtn {
         background: white;
@@ -173,6 +183,7 @@
         bottom: 10px;
         left: 10px;
         justify-content: space-around;
+        width: 0px;
     }
 
 }
