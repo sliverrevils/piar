@@ -15,6 +15,14 @@
   /* Удобочитаемый интервал */
   text-rendering: optimizeLegibility;
   font-kerning: normal;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  transition: all 200ms linear;
 
 
 }

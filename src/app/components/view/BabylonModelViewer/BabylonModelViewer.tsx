@@ -13,17 +13,23 @@ import {} from "@heroicons/react";
 import { CubeTransparentIcon } from "@heroicons/react/24/outline";
 import { Cog6ToothIcon } from "@heroicons/react/24/outline";
 import { XCircleIcon } from "@heroicons/react/24/outline";
+import { ChevronDoubleRightIcon } from "@heroicons/react/24/outline";
+import { ChevronDoubleLeftIcon } from "@heroicons/react/24/outline";
 
 // В имени мэша до # название её анимации (mech#1  - значит анимация mech) - мэш называем до # как название анимации которая играет по клику на мэш (т.к. мэшей может быть много в одной анимации)
 // Текстуры base_1, base_2 ... для смены
 // Название проигранных анимация сохраняются в массиве playedAnimsRef (что бы в следующий раз играть обратную анимацию) и в стэйте playedAnimations (стэйт только для обновления кнопок в HTML)
 
+//Центр камеры просчитывается автоматически по размерам всех мэшей (внешнии функции)
 const BabylonModelWithAnimation: React.FC<{
     modelPath: string;
     hdrPath?: string;
     baseFone?: boolean;
     roomPath?: string;
-}> = ({ modelPath, hdrPath, baseFone = false, roomPath }) => {
+    base1Material?: TexturesAllKeys;
+    base2Material?: TexturesAllKeys;
+    base3Material?: TexturesAllKeys;
+}> = ({ modelPath, hdrPath, baseFone = false, roomPath, base1Material, base2Material, base3Material }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const sceneRef = useRef<Scene | null>(null);
     const playedAnimsRef = useRef<string[]>([]); //! еще раз записываем все проигранные анимации в реф , потому что стэйт не обновляется в обработчике канваса
@@ -38,6 +44,7 @@ const BabylonModelWithAnimation: React.FC<{
     const [baseColor, setBaseColor] = useState<Color3>(Color3.FromHexString("#ffffff"));
 
     const [fullScreen, setFullscreen] = useState(false);
+    const [isAnimPanel, setIsAnimPanel] = useState(false);
 
     //! Функция при зменении размеров экрана
     const winResize = () => engineRef.current && engineRef.current.resize();
@@ -72,10 +79,6 @@ const BabylonModelWithAnimation: React.FC<{
             const newMaterial = createMaterial({ scene: sceneRef.current!, textureName: materialKey, materialName: targetMaterialName, baseColor: changeColor ? baseColor : undefined });
             meshesArr.forEach((mesh) => {
                 if (mesh.material && mesh.material.name === targetMaterialName) {
-                    // const standartMaterial = new StandardMaterial("standartMaterial");
-                    // standartMaterial.diffuseTexture = new Texture("/textures/wood/oak_veneer_01_diff_1k.jpg");
-                    // mesh.material = standartMaterial;
-
                     mesh.material = newMaterial;
                 }
             });
@@ -143,8 +146,8 @@ const BabylonModelWithAnimation: React.FC<{
         //! Добавляем камеру
         const camera = new ArcRotateCamera(
             "camera",
-            Math.PI / 2, // Угол вращения по горизонтали
-            Math.PI / 4, // Угол вращения по вертикали
+            Math.PI / 1.6, // Угол вращения по горизонтали
+            Math.PI / 2.5, // Угол вращения по вертикали
             3, // Расстояние от камеры до цели
             new Vector3(0, 0.5, 0), // Начальная точка фокусировки (сместили вниз)
             scene
@@ -195,6 +198,47 @@ const BabylonModelWithAnimation: React.FC<{
             setAnimationGroups(animGroups); // Сохраняем анимации в state
             // console.log("Meshes 🤖", scene.meshes);
             setMeshesArr(scene.meshes);
+
+            //меняем материал если указан в компоненте начальный
+            if (base1Material) {
+                const newMaterial = createMaterial({
+                    scene: sceneRef.current!,
+                    textureName: base1Material,
+                    materialName: "base_1",
+                    // baseColor: changeColor ? baseColor : undefined
+                });
+                meshes.forEach((mesh) => {
+                    if (mesh.material && mesh.material.name === "base_1") {
+                        mesh.material = newMaterial;
+                    }
+                });
+            }
+            if (base2Material) {
+                const newMaterial = createMaterial({
+                    scene: sceneRef.current!,
+                    textureName: base2Material,
+                    materialName: "base_2",
+                    // baseColor: changeColor ? baseColor : undefined
+                });
+                meshes.forEach((mesh) => {
+                    if (mesh.material && mesh.material.name === "base_2") {
+                        mesh.material = newMaterial;
+                    }
+                });
+            }
+            if (base3Material) {
+                const newMaterial = createMaterial({
+                    scene: sceneRef.current!,
+                    textureName: base3Material,
+                    materialName: "base_3",
+                    // baseColor: changeColor ? baseColor : undefined
+                });
+                meshes.forEach((mesh) => {
+                    if (mesh.material && mesh.material.name === "base_3") {
+                        mesh.material = newMaterial;
+                    }
+                });
+            }
         });
         //! Загружаем комнату
         if (roomPath) {
@@ -248,6 +292,7 @@ const BabylonModelWithAnimation: React.FC<{
     //Эффект ролного экрана (что бы модель была четкая)
     useEffect(() => {
         winResize();
+        document.body.style.overflow = fullScreen ? "hidden" : "auto";
     }, [fullScreen]);
 
     //!MEMOS
@@ -255,15 +300,19 @@ const BabylonModelWithAnimation: React.FC<{
     const animationBlockMemo = useMemo(() => {
         return (
             <div className={styles.animationsBlock}>
+                <div className={styles.animBlockBtn} onClick={() => setIsAnimPanel((state) => !state)}>
+                    <Cog6ToothIcon width={20} height={20} />
+                    {isAnimPanel ? <ChevronDoubleLeftIcon width={20} /> : <ChevronDoubleRightIcon width={20} />}
+                </div>
+
                 {animationGroups.map((animation) => (
-                    <div key={animation.name + "_anim"} className={`${styles.animationItem} ${playedAnimations.includes(animation.name) ? styles.animationPlayed : ""}`} onClick={() => playAnimation(animation.name)}>
-                        <Cog6ToothIcon width={20} height={20} />
+                    <div key={animation.name + "_anim"} className={`${styles.animationItem} ${playedAnimations.includes(animation.name) ? styles.animationPlayed : ""} ${isAnimPanel ? "" : styles.animationItemClosed}`} onClick={() => playAnimation(animation.name)}>
                         <span>{getAnimationText({ animationName: animation.name, played: playedAnimations.includes(animation.name) })}</span>
                     </div>
                 ))}
             </div>
         );
-    }, [animationGroups, playedAnimations]);
+    }, [animationGroups, playedAnimations, isAnimPanel]);
 
     //full screen button
     const fullScreenBtnMemo = useMemo(() => {
@@ -300,7 +349,7 @@ const BabylonModelWithAnimation: React.FC<{
                 </select> */}
 
                 <div className={styles.materialBlock}>
-                    <div className={styles.title}>Выбор обивки</div>
+                    <div className={styles.title}>Обивка</div>
                     <div className={styles.materialsList}>
                         {texturesAll
                             .filter((textItem) => [...textItem.forTarget].includes("base_1"))
@@ -313,13 +362,14 @@ const BabylonModelWithAnimation: React.FC<{
                                     <div className={styles.materialAboutBlock}>
                                         <div className={styles.name}>{textureItem.name}</div>
                                         <Image src={textureItem.texture} alt="key" width={300} height={300} />
+                                        <div className={styles.aboutText}>{textureItem.about}</div>
                                     </div>
                                 </div>
                             ))}
                     </div>
                 </div>
                 <div className={styles.materialBlock}>
-                    <div className={styles.title}>Выбор обивки</div>
+                    <div className={styles.title}>Внешний материал</div>
                     <div className={styles.materialsList}>
                         {texturesAll
                             .filter((textItem) => [...textItem.forTarget].includes("base_2"))
@@ -332,13 +382,14 @@ const BabylonModelWithAnimation: React.FC<{
                                     <div className={styles.materialAboutBlock}>
                                         <div className={styles.name}>{textureItem.name}</div>
                                         <Image src={textureItem.texture} alt="key" width={300} height={300} />
+                                        <div className={styles.aboutText}>{textureItem.about}</div>
                                     </div>
                                 </div>
                             ))}
                     </div>
                 </div>
                 <div className={styles.materialBlock}>
-                    <div className={styles.title}>Выбор обивки</div>
+                    <div className={styles.title}>Внутренний материал</div>
                     <div className={styles.materialsList}>
                         {texturesAll
                             .filter((textItem) => [...textItem.forTarget].includes("base_3"))
@@ -351,6 +402,7 @@ const BabylonModelWithAnimation: React.FC<{
                                     <div className={styles.materialAboutBlock}>
                                         <div className={styles.name}>{textureItem.name}</div>
                                         <Image src={textureItem.texture} alt="key" width={300} height={300} />
+                                        <div className={styles.aboutText}>{textureItem.about}</div>
                                     </div>
                                 </div>
                             ))}

@@ -66,7 +66,7 @@ const SliderWithThumbnails = ({ children }: { children: React.ReactNode[] }) => 
                     navigation={{}}
                     // navigation={{ prevEl: ".prevRightBtn", nextEl: ".nextRightBtn" }}
                     loop
-                    mousewheel
+                    // mousewheel
                     onClick={() => setFullScreen(true)}
                 >
                     {children.map((child) => (
