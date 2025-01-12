@@ -30,7 +30,7 @@
         gap: 5px;
         align-items: center;
         cursor: pointer;
-        opacity: .8;
+        opacity: 0;
 
         .text {
             font-size: 13px;
@@ -220,6 +220,10 @@
     }
 
     &:hover {
+        .fullScreenBtn {
+            opacity: .6;
+        }
+
         .colorPickerBlock {
             opacity: 1;
         }

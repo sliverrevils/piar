@@ -3,6 +3,7 @@ import { IItem } from "@/MongoDb/models/itemModel";
 import styles from "./item.module.scss";
 import SliderWithThumbnails from "@/app/components/common/Slider/Slider";
 import Image from "next/image";
+import Tabs from "@/app/components/common/Tabs/Tabs";
 //import Slider from "@/app/components/common/Slider/Slider";
 
 const mockSofa: IItem = {
@@ -47,25 +48,45 @@ const mockSofa: IItem = {
 export default async function ItemPage(props) {
     const { id } = await props.params;
     console.log("Props", await props.searchParams);
+    const sliderBlockHtml = (
+        <div className={styles.sliderBlock}>
+            <SliderWithThumbnails>
+                {/* <BabylonModelWithAnimation modelPath="\items\Taurus\model\taurus_otom_anim.glb" /> */}
+                <Image src={"/items/Taurus/img/photo_2023-09-01_12-30-16.jpg"} alt="img" width={3000} height={2000} />
+                <Image src={"/items/Taurus/img/photo_2023-09-01_12-30-59.jpg"} alt="img" width={3000} height={2000} />
+                <Image src={"/items/Taurus/img/photo_2023-09-01_12-31-04.jpg"} alt="img" width={3000} height={2000} />
+                <Image src={"/items/Taurus/img/photo_2023-09-01_12-31-08.jpg"} alt="img" width={3000} height={2000} />
+                <Image src={"/items/Taurus/img/photo_2023-09-01_12-31-15.jpg"} alt="img" width={3000} height={2000} />
+                <Image src={"/items/Taurus/img/taurus1.jpg"} alt="img" width={3000} height={2000} />
+            </SliderWithThumbnails>
+        </div>
+    );
+
+    const modelBlockHtml = (
+        <div className={styles.modelBlock}>
+            <BabylonModelWithAnimation modelPath="\items\Taurus\model\taurus_otom_anim.glb" base1Material="fabric5" base2Material="wood" base3Material="wood3" />
+        </div>
+    );
     return (
         <article className={styles.itemPageWrap}>
             <h1>Таурус</h1>
 
             <div className={styles.itemBlock}>
-                <div className={styles.modelBlock}>
-                    <BabylonModelWithAnimation modelPath="\items\Taurus\model\taurus_otom_anim.glb" base1Material="fabric5" base2Material="wood" base3Material="wood3" />
-                    <div className={styles.sliderBlock}>
-                        <SliderWithThumbnails>
-                            {/* <BabylonModelWithAnimation modelPath="\items\Taurus\model\taurus_otom_anim.glb" /> */}
-                            <Image src={"/items/Taurus/img/photo_2023-09-01_12-30-16.jpg"} alt="img" width={3000} height={2000} />
-                            <Image src={"/items/Taurus/img/photo_2023-09-01_12-30-59.jpg"} alt="img" width={3000} height={2000} />
-                            <Image src={"/items/Taurus/img/photo_2023-09-01_12-31-04.jpg"} alt="img" width={3000} height={2000} />
-                            <Image src={"/items/Taurus/img/photo_2023-09-01_12-31-08.jpg"} alt="img" width={3000} height={2000} />
-                            <Image src={"/items/Taurus/img/photo_2023-09-01_12-31-15.jpg"} alt="img" width={3000} height={2000} />
-                            <Image src={"/items/Taurus/img/taurus1.jpg"} alt="img" width={3000} height={2000} />
-                        </SliderWithThumbnails>
-                    </div>
+                <div className={styles.viewBlock}>
+                    <Tabs>
+                        {[
+                            {
+                                name: "3D",
+                                node: modelBlockHtml,
+                            },
+                            {
+                                name: "Фотографии",
+                                node: sliderBlockHtml,
+                            },
+                        ]}
+                    </Tabs>
                 </div>
+
                 <div className={styles.descriptionsBlock} lang="ru">
                     {mockSofa.descriptions}
                 </div>

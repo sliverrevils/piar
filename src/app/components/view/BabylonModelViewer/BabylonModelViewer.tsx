@@ -299,20 +299,22 @@ const BabylonModelWithAnimation: React.FC<{
     //animations block
     const animationBlockMemo = useMemo(() => {
         return (
-            <div className={styles.animationsBlock}>
-                <div className={styles.animBlockBtn} onClick={() => setIsAnimPanel((state) => !state)}>
-                    <Cog6ToothIcon width={20} height={20} />
-                    {isAnimPanel ? <ChevronDoubleLeftIcon width={20} /> : <ChevronDoubleRightIcon width={20} />}
-                </div>
-
-                {animationGroups.map((animation) => (
-                    <div key={animation.name + "_anim"} className={`${styles.animationItem} ${playedAnimations.includes(animation.name) ? styles.animationPlayed : ""} ${isAnimPanel ? "" : styles.animationItemClosed}`} onClick={() => playAnimation(animation.name)}>
-                        <span>{getAnimationText({ animationName: animation.name, played: playedAnimations.includes(animation.name) })}</span>
+            fullScreen && (
+                <div className={styles.animationsBlock}>
+                    <div className={styles.animBlockBtn} onClick={() => setIsAnimPanel((state) => !state)}>
+                        <Cog6ToothIcon width={20} height={20} />
+                        {isAnimPanel ? <ChevronDoubleLeftIcon width={20} /> : <ChevronDoubleRightIcon width={20} />}
                     </div>
-                ))}
-            </div>
+
+                    {animationGroups.map((animation) => (
+                        <div key={animation.name + "_anim"} className={`${styles.animationItem} ${playedAnimations.includes(animation.name) ? styles.animationPlayed : ""} ${isAnimPanel ? "" : styles.animationItemClosed}`} onClick={() => playAnimation(animation.name)}>
+                            <span>{getAnimationText({ animationName: animation.name, played: playedAnimations.includes(animation.name) })}</span>
+                        </div>
+                    ))}
+                </div>
+            )
         );
-    }, [animationGroups, playedAnimations, isAnimPanel]);
+    }, [animationGroups, playedAnimations, isAnimPanel, fullScreen]);
 
     //full screen button
     const fullScreenBtnMemo = useMemo(() => {
@@ -324,20 +326,12 @@ const BabylonModelWithAnimation: React.FC<{
         );
     }, [fullScreen]);
 
-    return (
-        <div className={`${styles.babyloneMainWrap} ${fullScreen ? styles.babyloneFullScreen : ""}`}>
-            {/* {baseColor?.toString()} */}
-            {/* Canvas для рендеринга Babylon.js */}
-            <canvas ref={canvasRef} />
-            {/* {playedAnimations} */}
-            <div className={styles.colorPickerBlock}>
-                <ColorPicker setBaseColor={setBaseColor} />
-            </div>
-            {animationBlockMemo}
-            {fullScreenBtnMemo}
-
-            <div className={styles.materialPanel}>
-                {/* <select onChange={(e) => playAnimation(e.target.value)} value={selectedAnimation || ""} style={{ padding: "5px", fontSize: "1rem" }}>
+    //material block HTML
+    const materialsBlockMemo = useMemo(() => {
+        return (
+            fullScreen && (
+                <div className={styles.materialPanel}>
+                    {/* <select onChange={(e) => playAnimation(e.target.value)} value={selectedAnimation || ""} style={{ padding: "5px", fontSize: "1rem" }}>
                     <option value="" disabled>
                         Выберите анимацию
                     </option>
@@ -348,67 +342,88 @@ const BabylonModelWithAnimation: React.FC<{
                     ))}
                 </select> */}
 
-                <div className={styles.materialBlock}>
-                    <div className={styles.title}>Обивка</div>
-                    <div className={styles.materialsList}>
-                        {texturesAll
-                            .filter((textItem) => [...textItem.forTarget].includes("base_1"))
-                            .map((textureItem) => (
-                                <div key={textureItem.name} className={styles.materialItem} onClick={() => changeMaterialByName({ targetMaterialName: "base_1", materialKey: textureItem.name, changeColor: true })}>
-                                    <div className={styles.imgWrap}>
-                                        <Image src={textureItem.texture} alt="key" width={300} height={300} />
+                    <div className={styles.materialBlock}>
+                        <div className={styles.title}>Обивка</div>
+                        <div className={styles.materialsList}>
+                            {texturesAll
+                                .filter((textItem) => [...textItem.forTarget].includes("base_1"))
+                                .map((textureItem) => (
+                                    <div key={textureItem.name} className={styles.materialItem} onClick={() => changeMaterialByName({ targetMaterialName: "base_1", materialKey: textureItem.name, changeColor: true })}>
+                                        <div className={styles.imgWrap}>
+                                            <Image src={textureItem.texture} alt="key" width={300} height={300} />
+                                        </div>
+                                        <div className={styles.materialName}>{textureItem.name}</div>
+                                        <div className={styles.materialAboutBlock}>
+                                            <div className={styles.name}>{textureItem.name}</div>
+                                            <Image src={textureItem.texture} alt="key" width={300} height={300} />
+                                            <div className={styles.aboutText}>{textureItem.about}</div>
+                                        </div>
                                     </div>
-                                    <div className={styles.materialName}>{textureItem.name}</div>
-                                    <div className={styles.materialAboutBlock}>
-                                        <div className={styles.name}>{textureItem.name}</div>
-                                        <Image src={textureItem.texture} alt="key" width={300} height={300} />
-                                        <div className={styles.aboutText}>{textureItem.about}</div>
+                                ))}
+                        </div>
+                    </div>
+                    <div className={styles.materialBlock}>
+                        <div className={styles.title}>Внешний материал</div>
+                        <div className={styles.materialsList}>
+                            {texturesAll
+                                .filter((textItem) => [...textItem.forTarget].includes("base_2"))
+                                .map((textureItem) => (
+                                    <div key={textureItem.name} className={styles.materialItem} onClick={() => changeMaterialByName({ targetMaterialName: "base_2", materialKey: textureItem.name })}>
+                                        <div className={styles.imgWrap}>
+                                            <Image src={textureItem.texture} alt="key" width={300} height={300} />
+                                        </div>
+                                        <div className={styles.materialName}>{textureItem.name}</div>
+                                        <div className={styles.materialAboutBlock}>
+                                            <div className={styles.name}>{textureItem.name}</div>
+                                            <Image src={textureItem.texture} alt="key" width={300} height={300} />
+                                            <div className={styles.aboutText}>{textureItem.about}</div>
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
+                                ))}
+                        </div>
+                    </div>
+                    <div className={styles.materialBlock}>
+                        <div className={styles.title}>Внутренний материал</div>
+                        <div className={styles.materialsList}>
+                            {texturesAll
+                                .filter((textItem) => [...textItem.forTarget].includes("base_3"))
+                                .map((textureItem) => (
+                                    <div key={textureItem.name} className={styles.materialItem} onClick={() => changeMaterialByName({ targetMaterialName: "base_3", materialKey: textureItem.name })}>
+                                        <div className={styles.imgWrap}>
+                                            <Image src={textureItem.texture} alt="key" width={300} height={300} />
+                                        </div>
+                                        <div className={styles.materialName}>{textureItem.name}</div>
+                                        <div className={styles.materialAboutBlock}>
+                                            <div className={styles.name}>{textureItem.name}</div>
+                                            <Image src={textureItem.texture} alt="key" width={300} height={300} />
+                                            <div className={styles.aboutText}>{textureItem.about}</div>
+                                        </div>
+                                    </div>
+                                ))}
+                        </div>
                     </div>
                 </div>
-                <div className={styles.materialBlock}>
-                    <div className={styles.title}>Внешний материал</div>
-                    <div className={styles.materialsList}>
-                        {texturesAll
-                            .filter((textItem) => [...textItem.forTarget].includes("base_2"))
-                            .map((textureItem) => (
-                                <div key={textureItem.name} className={styles.materialItem} onClick={() => changeMaterialByName({ targetMaterialName: "base_2", materialKey: textureItem.name })}>
-                                    <div className={styles.imgWrap}>
-                                        <Image src={textureItem.texture} alt="key" width={300} height={300} />
-                                    </div>
-                                    <div className={styles.materialName}>{textureItem.name}</div>
-                                    <div className={styles.materialAboutBlock}>
-                                        <div className={styles.name}>{textureItem.name}</div>
-                                        <Image src={textureItem.texture} alt="key" width={300} height={300} />
-                                        <div className={styles.aboutText}>{textureItem.about}</div>
-                                    </div>
-                                </div>
-                            ))}
-                    </div>
+            )
+        );
+    }, [fullScreen]);
+
+    //colorPicker block HTML
+    const colorPickerMemo = useMemo(() => {
+        return (
+            fullScreen && (
+                <div className={styles.colorPickerBlock}>
+                    <ColorPicker setBaseColor={setBaseColor} />
                 </div>
-                <div className={styles.materialBlock}>
-                    <div className={styles.title}>Внутренний материал</div>
-                    <div className={styles.materialsList}>
-                        {texturesAll
-                            .filter((textItem) => [...textItem.forTarget].includes("base_3"))
-                            .map((textureItem) => (
-                                <div key={textureItem.name} className={styles.materialItem} onClick={() => changeMaterialByName({ targetMaterialName: "base_3", materialKey: textureItem.name })}>
-                                    <div className={styles.imgWrap}>
-                                        <Image src={textureItem.texture} alt="key" width={300} height={300} />
-                                    </div>
-                                    <div className={styles.materialName}>{textureItem.name}</div>
-                                    <div className={styles.materialAboutBlock}>
-                                        <div className={styles.name}>{textureItem.name}</div>
-                                        <Image src={textureItem.texture} alt="key" width={300} height={300} />
-                                        <div className={styles.aboutText}>{textureItem.about}</div>
-                                    </div>
-                                </div>
-                            ))}
-                    </div>
-                </div>
-            </div>
+            )
+        );
+    }, [fullScreen]);
+    return (
+        <div className={`${styles.babyloneMainWrap} ${fullScreen ? styles.babyloneFullScreen : ""}`}>
+            <canvas ref={canvasRef} />
+            {colorPickerMemo}
+            {animationBlockMemo}
+            {fullScreenBtnMemo}
+            {materialsBlockMemo}
         </div>
     );
 };
