@@ -42,8 +42,10 @@ const SliderWithThumbnails = ({ children }: { children: React.ReactNode[] }) => 
                         verticalClass: styles.myScroll,
                     }}
                 >
-                    {children.map((child) => (
-                        <SwiperSlide className={styles.slideItem}>{child}</SwiperSlide>
+                    {children.map((child, idx) => (
+                        <SwiperSlide key={idx + "_slider1"} className={styles.slideItem}>
+                            {child}
+                        </SwiperSlide>
                     ))}
                 </Swiper>
                 <div className={`${styles.nextBtn} nextLeftBtn`}>
@@ -69,8 +71,10 @@ const SliderWithThumbnails = ({ children }: { children: React.ReactNode[] }) => 
                     // mousewheel
                     onClick={() => setFullScreen(true)}
                 >
-                    {children.map((child) => (
-                        <SwiperSlide className={styles.slideItem}>{child}</SwiperSlide>
+                    {children.map((child, idx) => (
+                        <SwiperSlide key={idx + "_slider2"} className={styles.slideItem}>
+                            {child}
+                        </SwiperSlide>
                     ))}
                 </Swiper>
             </div>

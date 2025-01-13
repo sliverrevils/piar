@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Roboto } from "next/font/google";
 import "./styles/globals.css";
 import Container from "./components/common/Container/Container";
+import { robotoFont } from "./fonts";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -11,11 +12,6 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
     variable: "--font-geist-mono",
     subsets: ["latin"],
-});
-
-const roboto = Roboto({
-    subsets: ["latin"],
-    weight: ["400", "700"], // Обычный и жирный
 });
 
 export const metadata: Metadata = {
@@ -30,7 +26,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className={roboto.className}>
+            <body className={robotoFont.className}>
                 {/* <header>
                     <div className="logo">
                         <img src="logo.png" alt="Логотип мебельного магазина" />
