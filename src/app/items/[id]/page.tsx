@@ -66,7 +66,7 @@ export default async function ItemPage(props) {
 
     const modelBlockHtml = (
         <div className={styles.modelBlock}>
-            <BabylonModelWithAnimation modelPath="\items\Taurus\model\taurus_otom_anim.glb" base1Material="fabric5" base2Material="wood" base3Material="wood3" />
+            <BabylonModelWithAnimation modelPath="\items\Taurus\model\taurus_otom_anim.glb" base1Material="fabric5" base2Material="wood" base3Material="wood3" initColor="#406787" />
         </div>
     );
 

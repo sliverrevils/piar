@@ -17,9 +17,9 @@ function useDebounce<T>(value: T, delay: number): T {
 }
 
 // Компонент выбора цвета
-const ColorPicker = ({ setBaseColor }: { setBaseColor: React.Dispatch<React.SetStateAction<Color3>> }) => {
-    const [color, setColor] = useState<Color3>(Color3.FromHexString("#ffffff"));
-    const [hexColor, setHexColor] = useState<string>("#ffffff");
+const ColorPicker = ({ setBaseColor, initColor }: { setBaseColor: React.Dispatch<React.SetStateAction<Color3>>; initColor?: string }) => {
+    const [color, setColor] = useState<Color3>(Color3.FromHexString(initColor || "#ffffff"));
+    const [hexColor, setHexColor] = useState<string>(initColor || "#ffffff");
 
     // Debounced цвет
     const debouncedColor = useDebounce(hexColor, 300); // 300 мс задержка

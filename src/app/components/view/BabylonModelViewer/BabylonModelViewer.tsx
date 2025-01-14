@@ -29,7 +29,8 @@ const BabylonModelWithAnimation: React.FC<{
     base1Material?: TexturesAllKeys;
     base2Material?: TexturesAllKeys;
     base3Material?: TexturesAllKeys;
-}> = ({ modelPath, hdrPath, baseFone = false, roomPath, base1Material, base2Material, base3Material }) => {
+    initColor?: string;
+}> = ({ modelPath, hdrPath, baseFone = false, roomPath, base1Material, base2Material, base3Material, initColor }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const sceneRef = useRef<Scene | null>(null);
     const playedAnimsRef = useRef<string[]>([]); //! еще раз записываем все проигранные анимации в реф , потому что стэйт не обновляется в обработчике канваса
@@ -41,7 +42,7 @@ const BabylonModelWithAnimation: React.FC<{
     const engineRef = useRef<Engine | null>(null);
     const [meshesArr, setMeshesArr] = useState<AbstractMesh[]>([]);
 
-    const [baseColor, setBaseColor] = useState<Color3>(Color3.FromHexString("#ffffff"));
+    const [baseColor, setBaseColor] = useState<Color3>(Color3.FromHexString(initColor || "#ffffff"));
 
     const [fullScreen, setFullscreen] = useState(false);
     const [isAnimPanel, setIsAnimPanel] = useState(false);
@@ -205,6 +206,7 @@ const BabylonModelWithAnimation: React.FC<{
                     scene: sceneRef.current!,
                     textureName: base1Material,
                     materialName: "base_1",
+                    baseColor: initColor ? Color3.FromHexString(initColor) : undefined,
                     // baseColor: changeColor ? baseColor : undefined
                 });
                 meshes.forEach((mesh) => {
@@ -412,7 +414,7 @@ const BabylonModelWithAnimation: React.FC<{
         return (
             fullScreen && (
                 <div className={styles.colorPickerBlock}>
-                    <ColorPicker setBaseColor={setBaseColor} />
+                    <ColorPicker setBaseColor={setBaseColor} initColor={initColor} />
                 </div>
             )
         );
