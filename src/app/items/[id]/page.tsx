@@ -1,3 +1,4 @@
+"use client";
 import BabylonModelWithAnimation from "@/app/components/view/BabylonModelViewer/BabylonModelViewer";
 import { IItem } from "@/MongoDb/models/itemModel";
 import styles from "./item.module.scss";
@@ -6,7 +7,10 @@ import Image from "next/image";
 import Tabs from "@/app/components/common/Tabs/Tabs";
 //import Slider from "@/app/components/common/Slider/Slider";
 import { Caveat } from "next/font/google";
-import { caveatFont, tekturFont } from "@/app/fonts";
+import { caveatFont, priceFont, rubik, tekturFont } from "@/app/fonts";
+import { Archive, BorderStyle, BorderStyleSharp, Category, FavoriteBorderSharp, FavoriteBorderTwoTone, FavoriteSharp, Hotel, SaveAlt, Schema, SettingsSuggest, SwapHoriz, WorkspacePremium } from "@mui/icons-material";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const mockSofa: IItem = {
     name: "Таурус с оттоманкой",
@@ -46,9 +50,11 @@ const mockSofa: IItem = {
 "Таурус" — не просто диван, а универсальное решение для отдыха, хранения и создания уюта в вашем доме!`,
 };
 
-export default async function ItemPage(props) {
-    const { id } = await props.params;
-    console.log("Props", await props.searchParams);
+export default function ItemPage(props) {
+    // const { id } = await props.params;
+    // console.log("Props", await props.searchParams);
+
+    const [isFavorite, setIsFavorite] = useState(false);
 
     const sliderBlockHtml = (
         <div className={styles.sliderBlock}>
@@ -95,11 +101,25 @@ export default async function ItemPage(props) {
                 <table>
                     <tbody>
                         <tr>
-                            <td>Категория:</td>
-                            <td>угловые диваны</td>
+                            <td>
+                                <div className={styles.paramItem}>
+                                    <Category />
+                                    <span>Категория:</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div className={styles.paramValue}>
+                                    <span>угловые диваны</span>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
-                            <td>Габариты:</td>
+                            <td>
+                                <div className={styles.paramItem}>
+                                    <SwapHoriz />
+                                    <span>Габариты:</span>
+                                </div>
+                            </td>
                             <td>
                                 <div>
                                     <table>
@@ -122,7 +142,12 @@ export default async function ItemPage(props) {
                             </td>
                         </tr>
                         <tr>
-                            <td>Спальное место:</td>
+                            <td>
+                                <div className={styles.paramItem}>
+                                    <Hotel width={25} />
+                                    <span>Спальное место:</span>
+                                </div>
+                            </td>
                             <td>
                                 <div>
                                     <table>
@@ -141,28 +166,82 @@ export default async function ItemPage(props) {
                             </td>
                         </tr>
                         <tr>
-                            <td>Механизм трансформации:</td>
-                            <td>{mockSofa.transformationMechanism}</td>
+                            <td>
+                                <div className={styles.paramItem}>
+                                    <SettingsSuggest width={30} />
+                                    <span>Механизм трансформации:</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div className={styles.paramValue}>
+                                    <span>{mockSofa.transformationMechanism}</span>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
-                            <td>Наполнение:</td>
-                            <td>{mockSofa.content.join(", ")}</td>
+                            <td>
+                                <div className={styles.paramItem}>
+                                    <SaveAlt />
+                                    <span>Наполнение:</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div className={styles.paramValue}>
+                                    <span>{mockSofa.content.join(", ")}</span>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
-                            <td>Каркас:</td>
-                            <td>{mockSofa.carcass.join(", ")}</td>
+                            <td>
+                                <div className={styles.paramItem}>
+                                    <Schema />
+                                    <span>Каркас:</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div className={styles.paramValue}>
+                                    <span>{mockSofa.carcass.join(", ")}</span>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
-                            <td>Ящик для белья:</td>
-                            <td>{mockSofa.laundryDrawer ? "есть" : "нет"}</td>
+                            <td>
+                                <div className={styles.paramItem}>
+                                    <Archive />
+                                    <span>Ящик для белья:</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div className={styles.paramValue}>
+                                    <span>{mockSofa.laundryDrawer ? "есть" : "нет"}</span>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
-                            <td>Съемный чехол:</td>
-                            <td>{mockSofa.removableCover ? "есть" : "нет"}</td>
+                            <td>
+                                <div className={styles.paramItem}>
+                                    <BorderStyleSharp />
+                                    <span>Съемный чехол:</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div className={styles.paramValue}>
+                                    <span>{mockSofa.removableCover ? "есть" : "нет"}</span>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
-                            <td>Гарантия:</td>
-                            <td>{mockSofa.warranty} мес.</td>
+                            <td>
+                                <div className={styles.paramItem}>
+                                    <WorkspacePremium />
+                                    <span>Гарантия:</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div className={styles.paramValue}>
+                                    <span>{mockSofa.warranty} мес.</span>
+                                </div>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -171,19 +250,40 @@ export default async function ItemPage(props) {
         </div>
     );
 
+    useEffect(() => {
+        isFavorite ? toast.success(`"Турус c оттоманкой" добавлен в избранное`) : toast.warning(`"Турус c оттоманкой" был удален из избранного`);
+    }, [isFavorite]);
     return (
         <article className={styles.itemPageWrap}>
-            <div className={styles.itemNameBlock}>
-                <h1>Таурус</h1>
-                <div className={styles.itemParamsBlock}>
-                    <div className={styles.paramItem}>угловой диван</div>
-                    <div className={styles.paramItem}>с отоманкой</div>
+            <div className={styles.topBlock}>
+                <div className={styles.itemNameBlock}>
+                    <h1 style={{ ...rubik.style }}>Таурус</h1>
+                    <div className={styles.itemParamsBlock} style={{ ...tekturFont.style }}>
+                        <div className={styles.paramItem}>угловой диван</div>
+                        <div className={styles.paramItem}>с отоманкой</div>
+                    </div>
+                </div>
+                <div className={styles.itemInfoTextLine}>
+                    <h2 style={{ ...caveatFont.style }}>Cочетание элегантного дизайна и продуманной функциональности, созданное для вашего максимального комфорта.</h2>
                 </div>
             </div>
-            <h2 className={styles.itemInfoTextLine} style={{ ...caveatFont.style, textAlign: "center" }}>
-                <b>"Таурус"</b> — это сочетание элегантного дизайна и продуманной функциональности, созданное для вашего максимального комфорта.
-            </h2>
+
             <div className={styles.itemBlock}>
+                <div className={styles.favoriteBlock} onClick={() => setIsFavorite((state) => !state)}>
+                    {isFavorite ? <FavoriteSharp style={{ color: "tomato" }} /> : <FavoriteBorderSharp style={{ color: "gray" }} />}
+                </div>
+                <div className={styles.priceBlock}>
+                    <div className={styles.prices}>
+                        <div className={styles.currentPrice} style={{ ...priceFont.style }}>
+                            180 000 ₽
+                        </div>
+                        <div className={styles.oldPrice}>212 000 ₽</div>
+                    </div>
+                    <div className={styles.getBlock}>
+                        <div className={styles.buy}>купить</div>
+                        <div className={styles.inCase}>добавить в корзину</div>
+                    </div>
+                </div>
                 {viewBlockHtml}
 
                 {descriptionsBlockHtml}

@@ -10,10 +10,15 @@
     .tabsBlock {
         //border: 1px solid red;
         display: flex;
+        margin-left: 10px;
+        gap: 5px;
 
         .tabItem {
-            // border: 1px solid black;
-            margin-left: 10px;
+            font-weight: 600;
+            color: gray;
+
+            border: 1px solid rgb(236, 234, 234);
+
             padding: 3px 10px;
             border-radius: 3px 3px 3px 3px;
             cursor: pointer;
@@ -23,6 +28,7 @@
 
 
         .selectedTab {
+            border: none;
 
             background: gray;
             color: white;

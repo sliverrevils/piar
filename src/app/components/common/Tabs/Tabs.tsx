@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import styles from "./tabs.module.scss";
+import { caveatFont } from "@/app/fonts";
 
 export default function Tabs({ children }: { children: { name: string; node: React.ReactNode; about: string }[] }) {
     const [selectedTabIdex, setSelectedTabIndex] = useState(0);
@@ -13,7 +14,7 @@ export default function Tabs({ children }: { children: { name: string; node: Rea
         <div className={styles.tabsWrap}>
             <div className={styles.tabsBlock}>
                 {children.map(({ name }, idx) => (
-                    <div key={name + "_tabsKeys"} className={`${styles.tabItem} ${selectedTabIdex === idx ? styles.selectedTab : ""}`} onClick={() => setSelectedTabIndex(idx)} onMouseMove={() => selectedTabIdex === idx && setIsSelectedTab(true)} onMouseLeave={() => setIsSelectedTab(false)}>
+                    <div key={name + "_tabsKeys"} style={{ ...caveatFont.style, lineHeight: 1, fontSize: 20 }} className={`${styles.tabItem} ${selectedTabIdex === idx ? styles.selectedTab : ""}`} onClick={() => setSelectedTabIndex(idx)} onMouseMove={() => selectedTabIdex === idx && setIsSelectedTab(true)} onMouseLeave={() => setIsSelectedTab(false)}>
                         {name}
                     </div>
                 ))}

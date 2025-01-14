@@ -15,6 +15,7 @@ import { Cog6ToothIcon } from "@heroicons/react/24/outline";
 import { XCircleIcon } from "@heroicons/react/24/outline";
 import { ChevronDoubleRightIcon } from "@heroicons/react/24/outline";
 import { ChevronDoubleLeftIcon } from "@heroicons/react/24/outline";
+import { AspectRatio } from "@mui/icons-material";
 
 // В имени мэша до # название её анимации (mech#1  - значит анимация mech) - мэш называем до # как название анимации которая играет по клику на мэш (т.к. мэшей может быть много в одной анимации)
 // Текстуры base_1, base_2 ... для смены
@@ -323,7 +324,10 @@ const BabylonModelWithAnimation: React.FC<{
         return (
             <div className={styles.fullScreenBtn} onClick={() => setFullscreen((state) => !state)}>
                 <div className={styles.text}>{fullScreen ? "" : "На весь экран"}</div>
-                {fullScreen ? <XCircleIcon width={30} height={30} /> : <CubeTransparentIcon width={25} height={25} />}
+                {
+                    fullScreen ? <XCircleIcon width={30} height={30} /> : <AspectRatio width={30} />
+                    //<CubeTransparentIcon width={25} height={25}
+                }
             </div>
         );
     }, [fullScreen]);
@@ -421,6 +425,7 @@ const BabylonModelWithAnimation: React.FC<{
     }, [fullScreen]);
     return (
         <div className={`${styles.babyloneMainWrap} ${fullScreen ? styles.babyloneFullScreen : ""}`}>
+            <div className={styles.backFone}></div>
             <canvas ref={canvasRef} />
             {colorPickerMemo}
             {animationBlockMemo}

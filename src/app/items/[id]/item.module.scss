@@ -3,57 +3,135 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    //gap: 10px;
 
-    padding: 20px 0;
+    padding: 10px 0;
 
-    .itemNameBlock {
-        align-self: flex-start;
-        padding: 5px 10px;
+    .topBlock {
+        display: flex;
         //border: 1px solid black;
+        gap: 20px;
+        margin-bottom: 20px;
 
-        .itemParamsBlock {
-            margin-left: 20px;
-            display: flex;
-            gap: 5px;
 
-            .paramItem {
+        .itemNameBlock {
+            align-self: flex-start;
+            padding: 5px 10px;
+            //background: gray;
 
-                cursor: pointer;
-                line-height: 1;
-                padding: 4px 10px;
-                background: gray;
-                color: white;
-                border-radius: 5px;
+            //border: 1px solid black;
+            h1 {
+                line-height: 1.2;
+                font-size: 35px;
+                color: #406787;
             }
 
+            .itemParamsBlock {
+                align-self: center;
+                //margin-left: 20px;
+                display: flex;
+                gap: 5px;
+
+                .paramItem {
+                    text-wrap: nowrap;
+                    font-size: 12px;
+
+                    cursor: pointer;
+                    line-height: 1;
+                    padding: 4px 10px;
+                    background: #406787;
+                    color: white;
+                    border-radius: 5px;
+                }
+
+            }
+        }
+
+        .itemInfoTextLine {
+            // border: 1px solid black;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            min-height: 100%;
+
+            h2 {
+                line-height: 1;
+                font-size: 25px;
+                color: #eb8400;
+                filter: drop-shadow(1px 1px 1px rgb(173, 173, 173));
+            }
         }
     }
-
-    .itemInfoTextLine {
-        font-size: 30px;
-        // border-bottom: 1px solid rgb(233, 232, 232);
-        // border-top: 1px solid rgb(233, 232, 232);
-        color: #eb8400;
-        filter: drop-shadow(1px 1px 1px rgb(173, 173, 173));
-
-        b {
-            color: #563225;
-        }
-    }
-
-
-
-
 
     .itemBlock {
-        // border: 1px solid black;
+        //border: 1px solid black;
 
         width: 100%;
         height: 100%;
         position: relative;
         display: flex;
         gap: 10px;
+
+        .favoriteBlock {
+            position: absolute;
+            left: 10px;
+            top: 40px;
+            z-index: 11;
+            opacity: .6;
+            filter: drop-shadow(3px 3px 5px black);
+
+            cursor: pointer;
+
+            svg {
+
+                font-size: 50px;
+
+
+            }
+
+            &:hover {
+                opacity: 1;
+            }
+
+        }
+
+        .priceBlock {
+            border: 1px solid black;
+
+            position: absolute;
+            bottom: 0px;
+            left: 50%;
+
+            .prices {
+
+
+                .oldPrice {
+                    text-align: end;
+                    line-height: 1;
+                    // top: -20px;
+                    // right: 0;
+                    // position: absolute;
+                    color: gray;
+                    text-decoration: line-through;
+                }
+
+                .currentPrice {
+                    line-height: 1;
+                    color: green;
+                    font-size: 30px;
+                    font-weight: 600;
+                }
+            }
+
+            .getBlock {
+                display: flex;
+
+                .buy {}
+
+                .inCase {}
+
+            }
+        }
 
 
         .viewBlock {
@@ -108,8 +186,33 @@
                         }
 
                         td {
-                            table {
+                            font-size: 12px;
 
+
+                            .paramItem {
+                                padding-left: 5px;
+                                display: flex;
+                                align-items: center;
+                                gap: 5px;
+                                width: 100%;
+                                height: 100%;
+                                padding: 5px 0;
+                            }
+
+                            .paramValue {
+                                width: 100%;
+                                height: 100%;
+                                display: flex;
+                                align-items: center;
+                            }
+
+                            svg {
+                                color: #eb8400;
+                            }
+
+                            table {
+                                border-collapse: separate;
+                                border-spacing: 2px;
                                 font-size: 15px;
 
                                 tr {
