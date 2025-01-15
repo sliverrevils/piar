@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Engine, Scene, SceneLoader, ArcRotateCamera, HemisphericLight, Vector3, AnimationGroup, PointerEventTypes, ArcRotateCameraPointersInput, StandardMaterial, Color3, PBRMaterial, Texture, AbstractMesh, HDRCubeTexture, MeshBuilder, Mesh } from "@babylonjs/core";
+import { Engine, Scene, SceneLoader, ArcRotateCamera, HemisphericLight, Vector3, AnimationGroup, PointerEventTypes, ArcRotateCameraPointersInput, StandardMaterial, Color3, PBRMaterial, Texture, AbstractMesh, HDRCubeTexture, MeshBuilder, Mesh, Matrix, BaseTexture, Material } from "@babylonjs/core";
 import "@babylonjs/loaders";
 import { createMaterial, texturesAll, TexturesAllKeys } from "./materials";
 import Image from "next/image";
@@ -15,7 +15,7 @@ import { Cog6ToothIcon } from "@heroicons/react/24/outline";
 import { XCircleIcon } from "@heroicons/react/24/outline";
 import { ChevronDoubleRightIcon } from "@heroicons/react/24/outline";
 import { ChevronDoubleLeftIcon } from "@heroicons/react/24/outline";
-import { AspectRatio } from "@mui/icons-material";
+import { AspectRatio, ChangeCircleSharp } from "@mui/icons-material";
 
 // В имени мэша до # название её анимации (mech#1  - значит анимация mech) - мэш называем до # как название анимации которая играет по клику на мэш (т.к. мэшей может быть много в одной анимации)
 // Текстуры base_1, base_2 ... для смены
@@ -34,6 +34,7 @@ const BabylonModelWithAnimation: React.FC<{
 }> = ({ modelPath, hdrPath, baseFone = false, roomPath, base1Material, base2Material, base3Material, initColor }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const sceneRef = useRef<Scene | null>(null);
+    const cameraRef = useRef<ArcRotateCamera>(null);
     const playedAnimsRef = useRef<string[]>([]); //! еще раз записываем все проигранные анимации в реф , потому что стэйт не обновляется в обработчике канваса
     const [playedAnimations, setPlayedAnimations] = useState<string[]>([]); //! а тут все проигранные только для кнопок в HTML
     const isDelegation = useRef<boolean>(false);
@@ -99,6 +100,40 @@ const BabylonModelWithAnimation: React.FC<{
             });
     };
 
+    //!Зеркало
+    function mirrorScene(scene: Scene, camera: ArcRotateCamera) {
+        // 1. Зеркалирование камеры
+        const originalGetViewMatrix = camera.getViewMatrix.bind(camera);
+        camera.getViewMatrix = () => {
+            const viewMatrix = originalGetViewMatrix().clone();
+            const scaleMatrix = Matrix.Scaling(-1, 1, 1); // Инверсия оси X
+            viewMatrix.multiplyToRef(scaleMatrix, viewMatrix);
+            return viewMatrix;
+        };
+
+        // 2. Исправление управления
+        const pointerInput = camera.inputs.attached.pointers as any;
+        pointerInput.angularSensibilityX *= -1; // Исправление управления по X
+        pointerInput.angularSensibilityY *= -1; // Исправление управления по Y
+
+        // 3. Корректировка текстур
+        scene.meshes.forEach((mesh: AbstractMesh) => {
+            const material = mesh.material as Material | null;
+            if (material) {
+                material.backFaceCulling = false; // Отключаем скрытие задних граней
+            }
+
+            if (material && material.getActiveTextures) {
+                const textures = material.getActiveTextures();
+                textures.forEach((texture: BaseTexture) => {
+                    if (texture instanceof Texture) {
+                        texture.uScale *= -1; // Исправляем инверсию текстур по оси U
+                    }
+                });
+            }
+        });
+    }
+
     //TODO обработка событий на канвасе
     if (sceneRef.current && !isDelegation.current) {
         isDelegation.current = true;
@@ -154,6 +189,7 @@ const BabylonModelWithAnimation: React.FC<{
             new Vector3(0, 0.5, 0), // Начальная точка фокусировки (сместили вниз)
             scene
         );
+        cameraRef.current = camera;
 
         camera.wheelDeltaPercentage = 0.01; // Уменьшение значения делает скролл более плавным
         camera.pinchDeltaPercentage = 0.01; // Для плавного изменения масштаба при жестах
@@ -161,11 +197,9 @@ const BabylonModelWithAnimation: React.FC<{
         camera.wheelPrecision = 100; // Мягкость приближения
         camera.wheelDeltaPercentage = 0.01; // Плавность изменения масштаба
         camera.inertia = 0.8; // Инерция для плавности
-
         // Ограничение приближения
         // camera.lowerRadiusLimit = 3;
         // camera.upperRadiusLimit = 7;
-
         camera.upperBetaLimit = Math.PI / 2; // Максимальный угол (горизонтальный вид) // Запрещаем смотреть снизу
 
         camera.attachControl(canvasRef.current, true);
@@ -431,6 +465,9 @@ const BabylonModelWithAnimation: React.FC<{
             {animationBlockMemo}
             {fullScreenBtnMemo}
             {materialsBlockMemo}
+            <div className={styles.changeSideBtn} onClick={() => mirrorScene(sceneRef.current!, cameraRef.current!)}>
+                <ChangeCircleSharp />
+            </div>
         </div>
     );
 };

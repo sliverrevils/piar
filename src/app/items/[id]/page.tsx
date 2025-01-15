@@ -50,6 +50,11 @@ const mockSofa: IItem = {
 "Таурус" — не просто диван, а универсальное решение для отдыха, хранения и создания уюта в вашем доме!`,
 };
 
+const initStates = {
+    favorite: true,
+    three: true,
+};
+
 export default function ItemPage(props) {
     // const { id } = await props.params;
     // console.log("Props", await props.searchParams);
@@ -251,7 +256,11 @@ export default function ItemPage(props) {
     );
 
     useEffect(() => {
-        isFavorite ? toast.success(`"Турус c оттоманкой" добавлен в избранное`) : toast.warning(`"Турус c оттоманкой" был удален из избранного`);
+        if (!initStates.favorite) {
+            isFavorite ? toast.success(`"Турус c оттоманкой" добавлен в избранное`) : toast.warning(`"Турус c оттоманкой" был удален из избранного`);
+        } else {
+            initStates.favorite = false;
+        }
     }, [isFavorite]);
     return (
         <article className={styles.itemPageWrap}>
@@ -272,7 +281,7 @@ export default function ItemPage(props) {
                 <div className={styles.favoriteBlock} onClick={() => setIsFavorite((state) => !state)}>
                     {isFavorite ? <FavoriteSharp style={{ color: "tomato" }} /> : <FavoriteBorderSharp style={{ color: "gray" }} />}
                 </div>
-                <div className={styles.priceBlock}>
+                {/* <div className={styles.priceBlock}>
                     <div className={styles.prices}>
                         <div className={styles.currentPrice} style={{ ...priceFont.style }}>
                             180 000 ₽
@@ -283,7 +292,7 @@ export default function ItemPage(props) {
                         <div className={styles.buy}>купить</div>
                         <div className={styles.inCase}>добавить в корзину</div>
                     </div>
-                </div>
+                </div> */}
                 {viewBlockHtml}
 
                 {descriptionsBlockHtml}

@@ -3,12 +3,20 @@ import { useEffect, useState } from "react";
 import styles from "./tabs.module.scss";
 import { caveatFont } from "@/app/fonts";
 
+const initStates = {
+    help: true,
+};
+
 export default function Tabs({ children }: { children: { name: string; node: React.ReactNode; about: string }[] }) {
     const [selectedTabIdex, setSelectedTabIndex] = useState(0);
     const [isSelectedTab, setIsSelectedTab] = useState(false);
 
     useEffect(() => {
-        setIsSelectedTab(true);
+        if (!initStates.help) {
+            setIsSelectedTab(true);
+        } else {
+            initStates.help = false;
+        }
     }, [selectedTabIdex]);
     return (
         <div className={styles.tabsWrap}>

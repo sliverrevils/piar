@@ -97,13 +97,11 @@
 
         .priceBlock {
             border: 1px solid black;
-
             position: absolute;
             bottom: 0px;
             left: 50%;
 
             .prices {
-
 
                 .oldPrice {
                     text-align: end;
@@ -261,6 +259,49 @@
                 margin-left: 13px;
             }
         }
+    }
+
+    @media(max-width:600px) {
+        padding: 0;
+        //border: 2px solid black;
+
+        .topBlock {
+            flex-direction: column;
+        }
+
+        .itemBlock {
+            flex-direction: column;
+
+
+            .viewBlock {
+                width: 100%;
+            }
+
+            .descriptionsBlock {
+                width: 100%;
+            }
+        }
+
+        .aboutBlock {
+            padding: 3px 6px;
+            border-radius: 3px;
+
+            h2 {
+                font-size: 17px;
+            }
+
+            .speshalBlock {
+                font-size: 14px;
+                margin-left: 10px;
+
+                ul {
+                    margin-left: 10px;
+                }
+            }
+
+        }
+
+
     }
 
 
