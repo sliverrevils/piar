@@ -23,7 +23,7 @@ import { AspectRatio, ChangeCircleSharp } from "@mui/icons-material";
 
 //Центр камеры просчитывается автоматически по размерам всех мэшей (внешнии функции)
 const BabylonModelWithAnimation: React.FC<{
-    modelPath: string;
+    modelPath?: string;
     hdrPath?: string;
     baseFone?: boolean;
     roomPath?: string;
@@ -31,7 +31,17 @@ const BabylonModelWithAnimation: React.FC<{
     base2Material?: TexturesAllKeys;
     base3Material?: TexturesAllKeys;
     initColor?: string;
-}> = ({ modelPath, hdrPath, baseFone = false, roomPath, base1Material, base2Material, base3Material, initColor }) => {
+}> = ({
+    modelPath,
+    hdrPath,
+    baseFone = false,
+    roomPath,
+    base1Material,
+    base2Material,
+    base3Material,
+    initColor,
+    //
+}) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const sceneRef = useRef<Scene | null>(null);
     const cameraRef = useRef<ArcRotateCamera>(null);
@@ -223,7 +233,6 @@ const BabylonModelWithAnimation: React.FC<{
         //! Добавляем свет
         new HemisphericLight("light", new Vector3(0, 1, 0), scene);
 
-        //! Загружаем модель
         SceneLoader.ImportMesh("", "", modelPath, scene, (meshes, particleSystems, skeletons, animGroups) => {
             setCameraToSceneBounds(scene, camera);
 

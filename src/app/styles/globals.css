@@ -11,7 +11,7 @@
   /* Улучшает читаемость */
   font-kerning: normal;
   /* Корректировка межбуквенных расстояний */
-  line-height: 1.6;
+  /*line-height: 1.6;*/
   /* Удобочитаемый интервал */
   text-rendering: optimizeLegibility;
   font-kerning: normal;

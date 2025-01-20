@@ -15,7 +15,7 @@ export default function Admin() {
                     <Link href={`admin/items/create`}> Create item</Link>
                 </li>
             </ul>
-            <UploadForm />
+            <UploadForm type="3d" />
             {/* <ModelViewer modelPath={"/uploads/test.glb"} /> */}
             <div
                 style={{
@@ -34,7 +34,8 @@ export default function Admin() {
                 {/* <BabylonModelWithAnimation modelPath="uploads\mossy_brick_2k.glb" /> */}
                 {/* <BabylonModelWithAnimation modelPath="gltf/materials.gltf" /> */}
                 {/* <BabylonModelWithAnimation modelPath="uploads\taurus_otom.glb" /> */}
-                <BabylonModelWithAnimation modelPath="uploads\taurus_otom_anim.glb" />
+                {/* <BabylonModelWithAnimation modelPath="uploads\taurus_otom_anim.glb" /> */}
+                <BabylonModelWithAnimation modelPath="items\Taurus\model\taurus_otom_anim.glb" />
             </div>
         </main>
     );

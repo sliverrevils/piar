@@ -54,22 +54,22 @@ export default function CreateItem() {
             <h4>Количество</h4>
             <input type="text" value={item.count} onChange={(e) => setItem((state) => ({ ...state, count: Number(e.target.value) || 0 }))} placeholder="количество" />
             <h4>Габариты</h4>
-            <p>
-                <h5>Длина</h5>
+            <div>
+                <div>Длина</div>
                 <input type="text" value={item.dimensions.length} onChange={(e) => setItem((state) => ({ ...state, dimensions: { ...state.dimensions, length: Number(e.target.value) || 0 } }))} placeholder="длина" />
-                <h5>Ширина</h5>
+                <div>Ширина</div>
                 <input type="text" value={item.dimensions.width} onChange={(e) => setItem((state) => ({ ...state, dimensions: { ...state.dimensions, width: Number(e.target.value) || 0 } }))} placeholder="ширина" />
-                <h5>высота</h5>
+                <div>высота</div>
                 <input type="text" value={item.dimensions.height} onChange={(e) => setItem((state) => ({ ...state, dimensions: { ...state.dimensions, height: Number(e.target.value) || 0 } }))} placeholder="высота" />
-            </p>
+            </div>
 
             <h4>Размер спального места</h4>
-            <p>
-                <h5>Длина</h5>
+            <div>
+                <div>Длина</div>
                 <input type="text" value={item.bedSize.length} onChange={(e) => setItem((state) => ({ ...state, bedSize: { ...state.bedSize, length: Number(e.target.value) || 0 } }))} placeholder="длина" />
-                <h5>Ширина</h5>
+                <div>Ширина</div>
                 <input type="text" value={item.bedSize.width} onChange={(e) => setItem((state) => ({ ...state, bedSize: { ...state.bedSize, width: Number(e.target.value) || 0 } }))} placeholder="ширина" />
-            </p>
+            </div>
 
             <h4>Механизм трансформации</h4>
             <input type="text" value={item.transformationMechanism} onChange={(e) => setItem((state) => ({ ...state, transformationMechanism: e.target.value }))} placeholder="Механизм трансформации" />
