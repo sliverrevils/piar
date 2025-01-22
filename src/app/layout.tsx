@@ -27,11 +27,10 @@ export default async function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const settings = await getOrInitSettings();
+    // const settings = await getOrInitSettings();
     return (
         <html lang="en">
             <body className={robotoFont.className}>
-                {settings && <div>{settings.shopName}</div>}
                 {/* <header>
                     <div className="logo">
                         <img src="logo.png" alt="Логотип мебельного магазина" />
