@@ -2,7 +2,7 @@ import SettingsScreen from "@/app/components/screens/SettingsScreen/SettingsScre
 import { getOrInitSettings } from "@/Server/actions_DB/settingsActions";
 
 export default async function SettingsPage() {
-    const settings = await getOrInitSettings();
+    const settings = null; // await getOrInitSettings();
 
     if (!settings) return;
     return (
