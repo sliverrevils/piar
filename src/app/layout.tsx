@@ -7,15 +7,9 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { getOrInitSettings } from "@/Server/actions_DB/settingsActions";
 
-const geistSans = Geist({
-    variable: "--font-geist-sans",
-    subsets: ["latin"],
-});
+import { auth, authOptions } from "@/lib/auth";
 
-const geistMono = Geist_Mono({
-    variable: "--font-geist-mono",
-    subsets: ["latin"],
-});
+import { SignOutBtn } from "./components/auth/AuthButtons";
 
 export const metadata: Metadata = {
     title: "Create Next App",
@@ -27,10 +21,16 @@ export default async function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    // const settings = await getOrInitSettings();
+    // const settings = await getOrInitSettings(); // ПОДГРУЗКА НАСТРОЕК МАГАЗИНА
+
+    const session = await auth();
+    console.log("session🌟", session);
+
     return (
         <html lang="en">
             <body className={robotoFont.className}>
+                <div>{JSON.stringify(session?.user?.name, null, 2)}</div>
+
                 {/* <header>
                     <div className="logo">
                         <img src="logo.png" alt="Логотип мебельного магазина" />
