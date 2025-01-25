@@ -57,7 +57,8 @@ export const authOptions: NextAuthConfig = {
     session: { strategy: "jwt" },
     callbacks: {
         async signIn({ user, account, profile }) {
-            await connectDB();
+            const dbRes = await connectDB();
+            if (dbRes!) return true;
 
             if (profile && account && account.provider !== "credentials") {
                 const existingUser = await findUserByEmail({ email: profile.email || "" });
