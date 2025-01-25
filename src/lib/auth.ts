@@ -57,22 +57,26 @@ export const authOptions: NextAuthConfig = {
     session: { strategy: "jwt" },
     callbacks: {
         async signIn({ user, account, profile }) {
-            const dbRes = await connectDB();
-            if (dbRes!) return true;
+            try {
+                await connectDB();
 
-            if (profile && account && account.provider !== "credentials") {
-                const existingUser = await findUserByEmail({ email: profile.email || "" });
+                if (profile && account && account.provider !== "credentials") {
+                    const existingUser = await findUserByEmail({ email: profile.email || "" });
 
-                if (!existingUser) {
-                    console.log("PROFILE 🗃️", profile);
-                    console.log("ACCAUNT 🧾", account);
-                    await UserModel.create({
-                        name: profile.name || profile.real_name || profile?.email?.split("@")[0] || (profile?.default_email as string)?.split("@")[0],
-                        email: profile.email || profile?.default_email,
-                        image: profile.picture || null,
-                        provider: account.provider,
-                    });
+                    if (!existingUser) {
+                        console.log("PROFILE 🗃️", profile);
+                        console.log("ACCAUNT 🧾", account);
+
+                        await UserModel.create({
+                            name: profile.name || profile.real_name || profile?.email?.split("@")[0] || (profile?.default_email as string)?.split("@")[0],
+                            email: profile.email || profile?.default_email,
+                            image: profile.picture || null,
+                            provider: account.provider,
+                        });
+                    }
                 }
+            } catch (error) {
+                console.log("AUTH DB ERROR ‼️", error);
             }
 
             return true;
